@@ -13,6 +13,12 @@ Paste the output of `python 00-setup/detect-hardware.py` here, or fill in:
 - RAM (GB):
 - GPU/accelerator:
 - llama.cpp build backend:
+  
+- Platform: Windows (AMD64)
+- CPU: unknown (detect script), 8 physical / 8 logical cores
+- RAM (GB): 0.0 reported by detect script (likely probe issue)
+- GPU/accelerator: CPU only
+- llama.cpp build backend: CPU
 
 ## Track 01 — Quickstart
 
@@ -20,8 +26,8 @@ Paste the output of `python 00-setup/detect-hardware.py` here, or fill in:
 
 | Model | Load (ms) | TTFT P50/P95 (ms) | TPOT P50/P95 (ms) | E2E P50/P95/P99 (ms) | Decode rate (tok/s) |
 |---|--:|--:|--:|--:|--:|
-| (Q4_K_M) | | | | | |
-| (Q2_K)   | | | | | |
+| qwen2.5-1.5b-instruct-q4_k_m.gguf | 1707 | 287 / 1047 | 78.1 / 105.6 | 4949 / 6341 / 6359 | 12.8 |
+| qwen2.5-1.5b-instruct-q2_k.gguf   | 807  | 400 / 538  | 57.8 / 90.2  | 4060 / 6046 / 6718 | 17.3 |
 
 **One observation:** _e.g. Q4_K_M was 1.4× slower than Q2_K on my M2 Air, but the responses to the long-context prompt were noticeably more coherent. Trade-off worth it._
 
@@ -31,8 +37,8 @@ Run `locust -f 02-llama-cpp-server/load-test.py --headless -u N -r 1 -t 1m` for 
 
 | Concurrency | RPS | TTFB P50 (ms) | E2E P95 (ms) | E2E P99 (ms) | Failures |
 |--:|--:|--:|--:|--:|--:|
-| 10 | | | | | |
-| 50 | | | | | |
+| 10 | 0.21 | 27000 | 42000 | 42000 | 0 |
+| 50 | 0.30 | 30000 | 54000 | 54000 | 0 |
 
 **KV-cache observation:** _peak `llamacpp:kv_cache_usage_ratio` from `record-metrics.py` was 0.XX at concurrency 50, which means…_
 
